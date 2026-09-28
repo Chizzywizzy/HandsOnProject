@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CMAP — Working Preview</title>
+<style>
+  :root {
+    --primary: #B91C1C;
+    --primary-dark: #991B1B;
+    --gold: #C9A227;
+    --bg: #F5F6FA;
+    --card: #fff;
+    --text: #1e1e1e;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); }
+  header { background: var(--primary); color: #fff; padding: 20px 24px; }
+  header h1 { margin: 0; font-size: 22px; }
+  header p { margin: 4px 0 0; color: #fca5a5; font-size: 14px; }
+  main { max-width: 900px; margin: 0 auto; padding: 20px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+  .card strong { display: block; font-size: 26px; color: var(--primary); }
+  .card span { color: var(--muted); font-size: 13px; }
+  section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+  h2 { margin: 0 0 10px; font-size: 18px; color: var(--primary); }
+  form { display: flex; gap: 8px; flex-wrap: wrap; }
+  input, select { padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
+  input:focus, select:focus { outline: 2px solid var(--gold); border-color: var(--gold); }
+  button { background: var(--primary); color: #fff; border: 0; border-radius: 8px; padding: 9px 16px; font-weight: 700; cursor: pointer; }
+  button:hover { background: var(--primary-dark); }
+  ul { list-style: none; padding: 0; margin: 12px 0 0; }
+  li { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-top: 1px solid var(--border); font-size: 14px; }
+  li small { color: var(--muted); }
+  li button { background: #fff; color: var(--primary); border: 1px solid var(--primary); padding: 4px 10px; font-size: 12px; }
+  .ok { color: #15803d; font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>CMAP — Initial Working Page</h1>
+  <p>Local demo only. No sign-in or database. Data saves in this browser.</p>
+</header>
+<main>
+  <div class="cards">
+    <div class="card"><strong id="cMembers">0</strong><span>Members</span></div>
+    <div class="card"><strong id="cVisitors">0</strong><span>Visitors this week</span></div>
+    <div class="card"><strong id="cTasks">0</strong><span>Pending tasks</span></div>
+  </div>
+
+  <section>
+    <h2>Add member</h2>
+    <form id="memberForm">
+      <input id="mName" placeholder="Full name e.g. Adaeze Okafor" required style="flex:2;min-width:200px" />
+      <select id="mDept">
+        <option>Choir</option><option>Ushering</option><option>Youth</option><option>Media</option>
+      </select>
+      <button type="submit">Add</button>
+    </form>
+    <div id="msg" class="ok"></div>
+    <ul id="memberList"></ul>
+  </section>
+
+  <section>
+    <h2>Record visit</h2>
+    <form id="visitForm">
+      <input id="vName" placeholder="Visitor name" required style="flex:2;min-width:200px" />
+      <button type="submit">Record</button>
+    </form>
+    <ul id="visitList"></ul>
+  </section>
+
+  <section>
+    <h2>Add task</h2>
+    <form id="taskForm">
+      <input id="tTitle" placeholder="Task e.g. Follow up with new visitors" required style="flex:2;min-width:200px" />
+      <button type="submit">Add</button>
+    </form>
+    <ul id="taskList"></ul>
+  </section>
+</main>
+<script>
+  const store = {
+    load(k, fb) { try { return JSON.parse(localStorage.getItem(k)) ?? fb; } catch { return fb; } },
+    save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+  };
+  let members = store.load("cmap_members", []);
+  let visits = store.load("cmap_visits", []);
+  let tasks = store.load("cmap_tasks", []);
+
+  const $ = id => document.getElementById(id);
+  function render() {
+    $("cMembers").textContent = members.length;
+    $("cVisitors").textContent = visits.length;
+    $("cTasks").textContent = tasks.filter(t => !t.done).length;
+    $("memberList").innerHTML = members.map((m, i) =>
+      `<li><span>${escapeHtml(m.name)} <small>${escapeHtml(m.dept)}</small></span><button data-m="${i}">Remove</button></li>`).join("");
+    $("visitList").innerHTML = visits.map((v, i) =>
+      `<li><span>${escapeHtml(v)}</span><button data-v="${i}">Remove</button></li>`).join("");
+    $("taskList").innerHTML = tasks.map((t, i) =>
+      `<li><span><input type="checkbox" data-t="${i}" ${t.done ? "checked" : ""} /> ${escapeHtml(t.title)}</span><button data-dt="${i}">Remove</button></li>`).join("");
+  }
+  function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+  $("memberForm").onsubmit = e => {
+    e.preventDefault();
+    members.push({ name: $("mName").value.trim(), dept: $("mDept").value });
+    store.save("cmap_members", members);
+    $("mName").value = ""; $("msg").textContent = "Member added locally.";
+    render();
+  };
+  $("visitForm").onsubmit = e => { e.preventDefault(); visits.push($("vName").value.trim()); store.save("cmap_visits", visits); $("vName").value = ""; render(); };
+  $("taskForm").onsubmit = e => { e.preventDefault(); tasks.push({ title: $("tTitle").value.trim(), done: false }); store.save("cmap_tasks", tasks); $("tTitle").value = ""; render(); };
+  document.onclick = e => {
+    const m = e.target.dataset.m, v = e.target.dataset.v, dt = e.target.dataset.dt, t = e.target.dataset.t;
+    if (m !== undefined) { members.splice(+m, 1); store.save("cmap_members", members); render(); }
+    if (v !== undefined) { visits.splice(+v, 1); store.save("cmap_visits", visits); render(); }
+    if (dt !== undefined) { tasks.splice(+dt, 1); store.save("cmap_tasks", tasks); render(); }
+    if (t !== undefined) { tasks[+t].done = e.target.checked; store.save("cmap_tasks", tasks); render(); }
+  };
+  render();
+</script>
+</body>
+</html>
