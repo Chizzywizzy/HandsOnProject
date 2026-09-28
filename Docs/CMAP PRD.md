@@ -165,3 +165,9 @@ Allow authorized users to export PDF, Excel, or CSV in later releases.
 
 Display summary metrics and trends.
 
+**NOTE – Tool Choice Review (2026-09-28): Framework**
+Choice reviewed: Next.js (React + App Router, TypeScript) vs simpler Express + templated pages.
+Decision: Keep Next.js for MVP.
+Why: single codebase for responsive UI + API routes covers all 8 MVP modules and role-based pages without maintaining separate frontend/backend; App Router + API routes integrate directly with Prisma (SQLite local) and NextAuth Credentials for the 7 PRD roles; responsive requirement (computers, tablets, phones) is easier with React components; local run (`npm run dev` on localhost:3000) still holds with no cloud dependency.
+Trade-off accepted: heavier than Express/EJS and requires Node.js LTS install plus TypeScript learning curve, but avoids rework when dashboard/charts/reports grow. Revisit only if local machine cannot run Node or team prefers Python-only maintenance.
+
