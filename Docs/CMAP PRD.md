@@ -171,3 +171,8 @@ Decision: Keep Next.js for MVP.
 Why: single codebase for responsive UI + API routes covers all 8 MVP modules and role-based pages without maintaining separate frontend/backend; App Router + API routes integrate directly with Prisma (SQLite local) and NextAuth Credentials for the 7 PRD roles; responsive requirement (computers, tablets, phones) is easier with React components; local run (`npm run dev` on localhost:3000) still holds with no cloud dependency.
 Trade-off accepted: heavier than Express/EJS and requires Node.js LTS install plus TypeScript learning curve, but avoids rework when dashboard/charts/reports grow. Revisit only if local machine cannot run Node or team prefers Python-only maintenance.
 
+**NOTE – Design Refinement (2026-09-28): Primary color change**
+Change requested: primary color navy `#1B2A4A` → danger `#B91C1C1` in `design.html`.
+Change made: replaced `--navy: #1B2A4A` with `#B91C1C` and `--navy-light: #2C426E` with `#991B1B` (hover); updated Colors swatch from "Navy / Primary #1B2A4A" to "Danger / Primary #B91C1C". Header, headings, primary/outline buttons, and form labels now render in danger red via existing `var(--navy)` references.
+Correction noted: requested `#B91C1C1` has 7 hex digits and is invalid CSS, so applied valid danger `#B91C1C` (already used for `--danger`). No other colors, typography, buttons, or inputs changed.
+
