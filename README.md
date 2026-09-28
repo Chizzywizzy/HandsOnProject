@@ -47,6 +47,13 @@ Provide churches with a simple, secure, and practical digital platform for manag
 7. **Tasks & Accountability** – title, owner, department/group, priority, due date, status (Not Started, In Progress, Completed, Overdue, Cancelled); comments, attachments, history.
 8. **Reports** – membership, visitor, follow-up, attendance, department/group, event, task/accountability; filters by date, department, group, event, status (PDF/Excel/CSV export later).
 
+## Tech Stack (Local MVP)
+- Framework: Next.js (local, `http://localhost:3000`)
+- Database: SQLite file via Prisma (local, `./prisma/dev.db`)
+- Auth: NextAuth Credentials + bcrypt roles (local, no cloud provider)
+- Files: local `./uploads/` folder
+- Details: see `Docs/TECH_STACK.md`.
+
 ## Project Structure
 ```
 HandsOnProject/

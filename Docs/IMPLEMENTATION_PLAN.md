@@ -10,7 +10,7 @@ Data dependencies drive order: Users/Auth + Members/Departments first, then Visi
 ## Phase 0 – Foundation, Auth, and Shared Shell
 **Goal:** runnable app skeleton with login, roles, and audit trail.
 **Concrete outputs:**
-- Tech stack chosen and documented (e.g. frontend, backend, DB, hosting).
+- Tech stack locked in `Docs/TECH_STACK.md`: Next.js locally, SQLite file locally, NextAuth credentials locally, local `uploads/` folder.
 - Repo structure (`/frontend`, `/backend`, `/docs`), env config, seed script.
 - Auth: login/logout, 7 roles from PRD §5 (Super Admin, Pastor/Leader, Dept Leader, Group Leader, Staff, Volunteer, Member).
 - RBAC middleware + permission matrix enforced on API and UI.
