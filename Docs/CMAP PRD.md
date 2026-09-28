@@ -176,3 +176,11 @@ Change requested: primary color navy `#1B2A4A` → danger `#B91C1C1` in `design.
 Change made: replaced `--navy: #1B2A4A` with `#B91C1C` and `--navy-light: #2C426E` with `#991B1B` (hover); updated Colors swatch from "Navy / Primary #1B2A4A" to "Danger / Primary #B91C1C". Header, headings, primary/outline buttons, and form labels now render in danger red via existing `var(--navy)` references.
 Correction noted: requested `#B91C1C1` has 7 hex digits and is invalid CSS, so applied valid danger `#B91C1C` (already used for `--danger`). No other colors, typography, buttons, or inputs changed.
 
+**NOTE – Local Execution & Tool Review (2026-09-28)**
+App runs locally: Next.js dev server on `http://localhost:3000` on this machine, no cloud hosting in MVP.
+Database runs locally: SQLite file `./prisma/dev.db` via Prisma ORM, no external DB server in MVP.
+Accounts handling: NextAuth.js Credentials with bcrypt password hashing, local users table with role field for the 7 PRD roles, JWT sessions, seeded local Super Admin; no OAuth or cloud auth provider in MVP.
+Files handling: local `./uploads/` folder for profile photos, task attachments, and event documents; database stores relative paths only; cloud storage deferred post-MVP.
+Tool review rationale: Framework Next.js for single local codebase covering UI + API for all 8 modules; Database SQLite for zero-setup local file; Authentication NextAuth Credentials for local role-based access without external service; File storage local folder for simple offline local run. Details in `Docs/TECH_STACK.md`.
+Choice examined: Framework Next.js vs Express + EJS was reviewed. Next.js suits CMAP because it ships responsive role-based pages and APIs together while staying fully local.
+
