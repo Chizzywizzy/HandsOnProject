@@ -23,3 +23,29 @@ model AuditLog {
   entityId  String?
   createdAt DateTime @default(now())
 }
+
+model Department {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  type      String   @default("Department")
+  leaderId  Int?
+  createdAt DateTime @default(now())
+  members   Member[]
+}
+
+model Member {
+  id           Int         @id @default(autoincrement())
+  name         String
+  email        String?     @unique
+  phone        String?
+  dateJoined   DateTime?
+  status       String      @default("Active")
+  archived     Boolean     @default(false)
+  skills       String?
+  roles        String?
+  photoUrl     String?
+  departmentId Int?
+  department   Department? @relation(fields: [departmentId], references: [id])
+  groupName    String?
+  createdAt    DateTime    @default(now())
+}
