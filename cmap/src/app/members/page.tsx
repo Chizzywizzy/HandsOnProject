@@ -10,7 +10,8 @@ export default function Members() {
   }
   useEffect(() => { load(); }, []);
   async function add() {
-    await fetch("/api/members", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name }) });
+    if (!name.trim()) { alert("Enter a name first"); return; }
+    await fetch("/api/members", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name.trim() }) });
     setName(""); load();
   }
   return (<main style={{padding:24,fontFamily:"system-ui"}}>
@@ -21,6 +22,6 @@ export default function Members() {
       <input value={name} onChange={e=>setName(e.target.value)} placeholder="Full name" style={{padding:8}} />
       <button onClick={add} style={{marginLeft:8,padding:"8px 12px"}}>Add member</button>
     </div>
-    <ul>{list.map(m=>(<li key={m.id}>{m.name} <small>({m.status})</small></li>))}</ul>
+    <ul>{list.map(m=>(<li key={m.id}>{m.name} <small>({m.status})</small><button style={{marginLeft:8}} onClick={async()=>{await fetch("/api/members",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:m.id})});load();}}>Archive</button></li>))}</ul>
   </main>);
 }
