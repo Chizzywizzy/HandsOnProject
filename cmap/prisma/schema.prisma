@@ -72,3 +72,23 @@ model FollowUp {
   outcome   String?
   createdAt DateTime @default(now())
 }
+
+model AttendanceSession {
+  id           Int                @id @default(autoincrement())
+  date         DateTime           @default(now())
+  service      String
+  departmentId Int?
+  groupName    String?
+  eventTitle   String?
+  createdAt    DateTime           @default(now())
+  records      AttendanceRecord[]
+}
+
+model AttendanceRecord {
+  id        Int               @id @default(autoincrement())
+  sessionId Int
+  session   AttendanceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  memberId  Int?
+  visitorId Int?
+  present   Boolean           @default(true)
+}
