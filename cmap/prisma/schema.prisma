@@ -122,3 +122,25 @@ model EventNote {
   text    String
   createdAt DateTime @default(now())
 }
+
+model Task {
+  id              Int           @id @default(autoincrement())
+  title           String
+  description     String?
+  owner           String?
+  departmentId    Int?
+  priority        String        @default("Medium")
+  dueDate         DateTime?
+  status          String        @default("Not Started")
+  completionNotes String?
+  createdAt       DateTime      @default(now())
+  comments        TaskComment[]
+}
+
+model TaskComment {
+  id      Int      @id @default(autoincrement())
+  taskId  Int
+  task    Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  text    String
+  createdAt DateTime @default(now())
+}
