@@ -49,3 +49,26 @@ model Member {
   groupName    String?
   createdAt    DateTime    @default(now())
 }
+
+model Visitor {
+  id         Int        @id @default(autoincrement())
+  name       String
+  contact    String?
+  source     String?
+  notes      String?
+  visitDate  DateTime   @default(now())
+  returning  Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  followUps  FollowUp[]
+}
+
+model FollowUp {
+  id        Int      @id @default(autoincrement())
+  visitorId Int
+  visitor   Visitor  @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+  assignee  String?
+  dueDate   DateTime?
+  status    String   @default("Pending")
+  outcome   String?
+  createdAt DateTime @default(now())
+}
