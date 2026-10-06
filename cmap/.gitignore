@@ -46,3 +46,7 @@ node_modules/
 prisma/dev.db
 
 /src/generated/prisma
+
+prisma/*.db
+public/uploads/*
+!public/uploads/.gitkeep
