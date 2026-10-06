@@ -18,6 +18,7 @@ export default function Reports() {
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob); a.download = `${data.type}-report.csv`; a.click();
   }
+  function pdf() { window.print(); }
   useEffect(() => { fetch("/api/departments").then(r=>r.json()).then(setDepts); load(); }, []);
   return (<main style={{padding:24,fontFamily:"system-ui"}}>
     <h1>Reports (Phase 7 local)</h1>
@@ -26,6 +27,7 @@ export default function Reports() {
     <input value={status} onChange={e=>setStatus(e.target.value)} placeholder="Status (e.g. Active)" style={{marginLeft:8,padding:8}} />
     <button onClick={load} style={{marginLeft:8,padding:"8px 12px"}}>Run</button>
     <button onClick={csv} style={{marginLeft:8,padding:"8px 12px"}}>Export CSV</button>
-    {data && (<div style={{marginTop:12}}><strong>{data.type}: {data.count}</strong><ul>{data.rows?.slice(0,20).map((r:any)=>(<li key={r.id}><small>{r.name || r.title || r.service || ("#"+r.id)}</small></li>))}</ul><small>CSV exports now; PDF deferred.</small></div>)}
+    <button onClick={pdf} style={{marginLeft:8,padding:"8px 12px"}}>Export PDF</button>
+    {data && (<div style={{marginTop:12}}><strong>{data.type}: {data.count}</strong><ul>{data.rows?.slice(0,20).map((r:any)=>(<li key={r.id}><small>{r.name || r.title || r.service || ("#"+r.id)}</small></li>))}</ul><small>CSV + PDF (via Print → Save as PDF) ready.</small></div>)}
   </main>);
 }
