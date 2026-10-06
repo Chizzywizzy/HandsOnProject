@@ -1,0 +1,16 @@
+# CMAP MVP UAT (local, vs PRD §7.1–7.8)
+- Login as Super Admin (ned.uz07@gmail.com) → /login → lands / ✓
+- Dashboard /dashboard shows 7 cards matching modules ✓
+- Members: add/search/archive/assign dept ✓ | validation blocks empty ✓
+- Visitors: register/assign due-date/overdue red/convert → appears /members ✓
+- Attendance: new session/bulk save/present counts ✓
+- Departments: create/list/member counts ✓
+- Events: create/walk-in/note/attending counts ✓
+- Tasks: add/filter Overdue/Start/Complete/comments via API ✓
+- Reports: members/tasks/attendance/visitors with filters ✓ (export deferred)
+- Roles: 7 PRD roles in User.role; sensitive fields hidden (Phase 1 partial) ✓/todo photo upload
+- Audit: member/visitor/session/event/task creates + archives in AuditLog ✓
+- Responsive: /members /dashboard usable at 360px + desktop ✓/check
+- Ethics: no auto-discipline, AI labels N/A (no AI features in MVP), human review ✓
+- Local: app localhost:3000, DB prisma/dev.db, auth local, uploads local ✓
+- Backup: dev.db copied before release ✓/do now
