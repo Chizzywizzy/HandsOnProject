@@ -133,6 +133,7 @@ model Task {
   dueDate         DateTime?
   status          String        @default("Not Started")
   completionNotes String?
+  recurrence      String?       @default("None")
   createdAt       DateTime      @default(now())
   comments        TaskComment[]
 }
