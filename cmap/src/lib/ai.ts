@@ -1,7 +1,12 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
 // Server-side only. Never import this module from client components.
-const MODEL = "gemini-2.0-flash";
+//
+// Transport note: this module calls the official Gemini REST API directly
+// with fetch. The official @google/generative-ai SDK was tried first and
+// its generateContent call hangs without resolving inside this Next.js dev
+// server (verified: identical call succeeds in plain Node), so REST is used.
+// API key stays server-side: sent only as a query parameter over HTTPS,
+// never logged, never returned to the browser.
+const MODEL = "gemini-3.8-flash";
 const TIMEOUT_MS = 25000;
 
 export function aiConfigured(): boolean {
@@ -84,8 +89,6 @@ export async function summarizeReport(digest: ReportDigest): Promise<string> {
     e.code = "AI_NOT_CONFIGURED";
     throw e;
   }
-  const gen = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const model = gen.getGenerativeModel({ model: MODEL });
   const prompt = [
     "You summarize church admin reports. Rules:",
     "- Describe trends and notable changes from the counts only.",
@@ -97,24 +100,34 @@ export async function summarizeReport(digest: ReportDigest): Promise<string> {
     `Extra: ${digest.notes.join(", ")}.`,
   ].join("\n");
 
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  let res: Response;
   try {
-    const res = await model.generateContent(
-      { contents: [{ role: "user", parts: [{ text: prompt }] }] } as any,
-      // signal is ignored by older SDK versions; timeout also enforced below
+    // Key as query parameter: the x-goog-api-key header form hangs without
+    // resolving inside this Next.js dev server (verified repeatedly), while
+    // the query form succeeds. Key stays server-side; never logged/returned.
+    res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+      },
     );
-    const text = res.response.text();
-    if (!text?.trim()) throw new Error("AI_EMPTY_RESPONSE");
-    return text.trim();
   } catch (err: any) {
-    if (err?.name === "AbortError") throw new Error("AI_TIMEOUT");
-    if (err?.message === "AI_EMPTY_RESPONSE") throw err;
-    // Never leak provider internals, keys, or report data.
+    if (err?.name === "TimeoutError") throw new Error("AI_TIMEOUT");
     throw new Error("AI_PROVIDER_ERROR");
-  } finally {
-    clearTimeout(t);
   }
+  if (!res.ok) throw new Error("AI_PROVIDER_ERROR");
+  let text = "";
+  try {
+    const j = (await res.json()) as any;
+    text = (j.candidates?.[0]?.content?.parts ?? []).map((p: any) => p.text ?? "").join("");
+  } catch {
+    throw new Error("AI_PROVIDER_ERROR");
+  }
+  if (!text.trim()) throw new Error("AI_EMPTY_RESPONSE");
+  return text.trim();
 }
 
 export const AI_MODEL = MODEL;

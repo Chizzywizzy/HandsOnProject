@@ -58,7 +58,7 @@ Provide churches with a simple, secure, and practical digital platform for manag
 - Reports → **Generate AI Summary**: signed-in users can request a plain-language summary of the current report (members/tasks/attendance/visitors).
 - Server-side only (`POST /api/ai/summary`): sends aggregate counts to Gemini, never names, emails, phones, notes, or photos. Output is labeled AI-generated and must be reviewed by a human.
 - Setup: copy `cmap/.env.example` to `cmap/.env`, set `GEMINI_API_KEY` (free key at https://aistudio.google.com → Get API key), restart dev. Without a key the button returns a safe "not configured" message.
-- Model/SDK: `gemini-2.0-flash` via `@google/generative-ai`. Free-tier limits apply; each click is one request (rate-limited 10/10 min per user).
+- Model/transport: `gemini-3.8-flash` via the official Gemini REST API (server-side `fetch`; the JS SDK hung unresolved under Next.js dev and was removed). Free-tier limits apply; each click is one request (rate-limited 10/10 min per user).
 
 ## Project Structure
 ```
