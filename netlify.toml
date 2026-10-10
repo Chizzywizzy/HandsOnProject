@@ -6,7 +6,7 @@
 #  2. All env vars below set in Netlify dashboard → Site settings → Environment.
 [build]
   base = "cmap"
-  command = "npx prisma generate && npm run build"
+  command = "npx prisma migrate deploy && npm run build"
   publish = ".next"
 
 [build.environment]
