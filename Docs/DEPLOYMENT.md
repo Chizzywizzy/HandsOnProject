@@ -15,9 +15,9 @@ Preferred workflow: **Development → Local checks → Review changes → Commit
 5. Verify: Netlify dashboard → Deploys (wait for Published) → open `https://<site>.netlify.app` → login → smoke-test touched modules.
 6. Failed deploy: read the deploy log, fix locally, push again. Roll back: Netlify Deploys → previous successful deploy → Publish deploy.
 
-## Production readiness (blockers)
-- **Database (BLOCKER):** local SQLite `dev.db` does NOT persist on Netlify (ephemeral disk). Before real use: create a free Neon Postgres DB, set `DATABASE_URL` in Netlify env, change `prisma/schema.prisma` provider to `postgresql`, run `migrate deploy`, reseed admin. Local `dev.db` is never deleted by this process.
-- **Uploads (BLOCKER):** `public/uploads/` is ephemeral on Netlify. Before real use: move to Netlify Blobs or S3.
+## Production readiness
+- **Database: Netlify Database (Neon-backed, provisioned in dashboard).** Local SQLite `dev.db` is retired (kept on disk, untouched) and does NOT go to production. Schema uses `NETLIFY_DB_URL` (platform-injected); schema changes ship via `cmap/netlify/database/migrations/*.sql`, applied automatically at deploy. Local dev: `netlify dev` injects a branch DB, or set `NETLIFY_DB_URL` locally.
+- **Uploads (still open):** `public/uploads/` is ephemeral on Netlify. Before real use: move to Netlify Blobs or S3.
 - **Env vars required:** `DATABASE_URL`, `NEXTAUTH_URL` (= site URL), `NEXTAUTH_SECRET` (`openssl rand -base64 32`); optional: `GEMINI_API_KEY`, `GOOGLE_CLIENT_ID/SECRET/REFRESH_TOKEN` (add site callback URL in Google console), `TG_TOKEN`/`TG_CHAT_ID`.
 - Safe to deploy as a demo now (build passes); do not enter real member data until DB/uploads blockers are resolved.
 
