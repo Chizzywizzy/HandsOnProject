@@ -1,0 +1,13 @@
+# Netlify production config for CMAP (Next.js App Router in cmap/).
+# Auto-deploy: every push to main rebuilds. Free subdomain: <site>.netlify.app.
+# REQUIRED before first deploy:
+#  1. Managed Postgres (e.g. Neon free tier) — Netlify's disk is ephemeral,
+#     SQLite dev.db and public/uploads DO NOT persist. See Docs/DEPLOYMENT.md.
+#  2. All env vars below set in Netlify dashboard → Site settings → Environment.
+[build]
+  base = "cmap"
+  command = "npx prisma generate && npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "24"

@@ -1,7 +1,7 @@
 "use client";
 import { use, useEffect, useState } from "react";
 export default function Checkin({ params }: any) {
-  const { id } = use(params);
+  const { id } = use(params as Promise<{ id: string }>);
   const [members, setMembers] = useState<any[]>([]);
   const [mid, setMid] = useState("");
   useEffect(() => { fetch("/api/members").then(r=>r.json()).then(setMembers); }, []);
