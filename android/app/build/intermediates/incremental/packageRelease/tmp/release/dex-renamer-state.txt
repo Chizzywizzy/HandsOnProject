@@ -1,0 +1,4 @@
+#Mon Oct 12 07:22:30 WAT 2026
+base.0=C\:\\Users\\ACT Exam\\Documents\\QUBATORY\\HandsOnProject\\android\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

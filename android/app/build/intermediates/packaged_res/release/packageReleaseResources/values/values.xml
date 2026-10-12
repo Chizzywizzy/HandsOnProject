@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cmap_gold">#C9A227</color>
+    <color name="cmap_red">#B91C1C</color>
+    <color name="white">#FFFFFF</color>
+    <style name="Theme.CMAP.Starting" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/cmap_red</item>
+    </style>
+    <style name="Theme_CMAP" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+</resources>

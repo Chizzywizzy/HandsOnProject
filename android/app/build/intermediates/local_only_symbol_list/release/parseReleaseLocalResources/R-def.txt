@@ -1,0 +1,9 @@
+R_DEF: Internal format may change without notice
+local
+color cmap_gold
+color cmap_red
+color white
+mipmap ic_launcher
+mipmap ic_launcher_round
+style Theme_CMAP
+style Theme.CMAP.Starting
