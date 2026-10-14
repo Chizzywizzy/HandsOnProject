@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
+import { requireSession } from "@/lib/auth";
 import { writeFile } from "fs/promises";
 import path from "path";
 export async function POST(req: Request) {
+  const session = await requireSession();
+  if (session instanceof NextResponse) return session;
   const f = (await req.formData()).get("file") as File;
   if (!f) return NextResponse.json({ error: "No file" }, { status: 400 });
   const buf = Buffer.from(await f.arrayBuffer());

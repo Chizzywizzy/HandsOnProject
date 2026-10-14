@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireSession } from "@/lib/auth";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 async function googleToken() {
@@ -7,14 +8,18 @@ async function googleToken() {
   return j.access_token as string;
 }
 export async function GET() {
+  const session = await requireSession();
+  if (session instanceof NextResponse) return session;
   const e = await prisma.event.findMany({ orderBy: { date: "asc" }, include: { attendees: true, notes: true } });
   return NextResponse.json(e);
 }
 export async function POST(req: Request) {
+  const session = await requireSession();
+  if (session instanceof NextResponse) return session;
   const b = await req.json();
   if (!b?.title?.trim()) return NextResponse.json({ error: "Title required" }, { status: 400 });
   const e = await prisma.event.create({ data: { title: String(b.title).trim(), date: b.date ? new Date(b.date) : new Date(), time: b.time || null, venue: b.venue || null, description: b.description || null, coordinator: b.coordinator || null, status: b.status || "Planned" } });
-  await prisma.auditLog.create({ data: { actor: "local", action: "event.create", entity: "Event", entityId: String(e.id) } });
+  await prisma.auditLog.create({ data: { actor: session, action: "event.create", entity: "Event", entityId: String(e.id) } });
   try {
     if (process.env.GOOGLE_REFRESH_TOKEN) {
       const at = await googleToken();
@@ -24,6 +29,8 @@ export async function POST(req: Request) {
   return NextResponse.json(e);
 }
 export async function PATCH(req: Request) {
+  const session = await requireSession();
+  if (session instanceof NextResponse) return session;
   const b = await req.json();
   if (b.op === "attend") {
     const a = await prisma.eventAttendee.create({ data: { eventId: Number(b.id), memberId: b.memberId ? Number(b.memberId) : null, name: b.name || null } });

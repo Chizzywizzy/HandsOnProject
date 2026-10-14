@@ -1,3 +1,5 @@
+import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
 import Credentials from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
@@ -33,3 +35,16 @@ export const authOptions = {
     },
   },
 };
+
+// Session gate for API routes. Returns the session email, or a 401
+// NextResponse when unauthenticated. Usage:
+//   const gate = await requireSession();
+//   if (gate instanceof NextResponse) return gate;
+// Public kiosk exception: POST /api/attendance (QR self-check-in) stays open
+// by design and is documented in Docs/CMAP-PRODUCT-ASSESSMENT.md.
+export async function requireSession(): Promise<string | NextResponse> {
+  const session = await getServerSession(authOptions);
+  const email = (session?.user as any)?.email;
+  if (!email) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
+  return String(email);
+}

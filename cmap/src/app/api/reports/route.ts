@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
+import { requireSession } from "@/lib/auth";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 export async function GET(req: Request) {
+  const session = await requireSession();
+  if (session instanceof NextResponse) return session;
   const { searchParams } = new URL(req.url);
   const type = searchParams.get("type") ?? "members";
   const dept = searchParams.get("dept") ?? "";

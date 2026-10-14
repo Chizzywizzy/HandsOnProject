@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
+import { requireSession } from "@/lib/auth";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 export async function GET() {
+  const session = await requireSession();
+  if (session instanceof NextResponse) return session;
   const [members, visitors, sessions, events, tasks, followUps] = await Promise.all([
     prisma.member.count({ where: { archived: false } }),
     prisma.visitor.count(),
