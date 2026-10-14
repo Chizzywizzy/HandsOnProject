@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: light;
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -12,15 +13,40 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* CMAP ships a light-only theme: every surface hardcodes light colors,
+   so the OS dark-scheme query must not flip text variables (it washed out
+   uncolored headings/nav/links while white surfaces stayed white). */
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Landing page mobile fixes (desktop styles are inline and unchanged). */
+.cmap-h1 {
+  font-size: 56px;
+}
+@media (max-width: 640px) {
+  .cmap-nav {
+    flex-wrap: wrap;
+    row-gap: 10px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .cmap-h1 {
+    font-size: clamp(2.4rem, 11vw, 3.5rem);
+    overflow-wrap: break-word;
+  }
+  .cmap-cta {
+    flex-wrap: wrap;
+  }
+  .cmap-cta a {
+    flex: 1 1 150px;
+    text-align: center;
+  }
+  .cmap-chart-svg {
+    max-width: 100%;
+    height: auto;
+  }
 }
