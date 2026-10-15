@@ -1,13 +1,14 @@
 "use client";
+import { apiFetch } from "@/lib/client";
 import { useEffect, useState } from "react";
 export default function Departments() {
   const [list, setList] = useState<any[]>([]);
   const [name, setName] = useState("");
-  async function load() { setList(await (await fetch("/api/departments")).json()); }
+  async function load() { setList(await (await apiFetch("/api/departments")).json()); }
   useEffect(() => { load(); }, []);
   async function add() {
     if (!name.trim()) { alert("Enter a name first"); return; }
-    await fetch("/api/departments", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name.trim() }) });
+    await apiFetch("/api/departments", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name.trim() }) });
     setName(""); load();
   }
   return (<main style={{padding:24,fontFamily:"system-ui"}}>

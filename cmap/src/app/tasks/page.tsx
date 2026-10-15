@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/lib/client";
 import { useEffect, useState } from "react";
 export default function Tasks() {
   const [list, setList] = useState<any[]>([]);
@@ -7,11 +8,11 @@ export default function Tasks() {
   const [due, setDue] = useState("");
   const [recur, setRecur] = useState("None");
   const [filter, setFilter] = useState("All");
-  async function load() { setList(await (await fetch("/api/tasks")).json()); }
+  async function load() { setList(await (await apiFetch("/api/tasks")).json()); }
   useEffect(() => { load(); }, []);
   async function add() {
     if (!title.trim()) { alert("Enter a title"); return; }
-    await fetch("/api/tasks", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: title.trim(), owner: owner || null, dueDate: due || null, recurrence: recur }) });
+    await apiFetch("/api/tasks", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: title.trim(), owner: owner || null, dueDate: due || null, recurrence: recur }) });
     setTitle(""); setOwner(""); setDue(""); setRecur("None"); load();
   }
   const shown = list.filter(t => filter === "All" ? true : (t.computed === filter));
@@ -23,6 +24,6 @@ export default function Tasks() {
     <select value={recur} onChange={e=>setRecur(e.target.value)} style={{marginLeft:8,padding:8}}><option>None</option><option>Daily</option><option>Weekly</option><option>Monthly</option></select>
     <button onClick={add} style={{marginLeft:8,padding:"8px 12px"}}>Add</button>
     <div style={{marginTop:8}}>{["All","Not Started","In Progress","Completed","Overdue","Cancelled"].map(f=>(<button key={f} onClick={()=>setFilter(f)} style={{marginRight:6,fontWeight:filter===f?"bold":undefined}}>{f}</button>))}</div>
-    <ul>{shown.map(t=>(<li key={t.id} style={{marginTop:8}}>{t.title} <small>({t.computed} • {t.priority} • {t.owner || "unassigned"} • {t.dueDate ? new Date(t.dueDate).toLocaleDateString() : "no due"}{t.recurrence && t.recurrence !== "None" ? ` • ↻${t.recurrence}` : ""})</small><button style={{marginLeft:8}} onClick={async()=>{await fetch("/api/tasks",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:t.id,status:"In Progress"})});load();}}>Start</button><button style={{marginLeft:4}} onClick={async()=>{await fetch("/api/tasks",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:t.id,status:"Completed"})});load();}}>Complete</button></li>))}</ul>
+    <ul>{shown.map(t=>(<li key={t.id} style={{marginTop:8}}>{t.title} <small>({t.computed} • {t.priority} • {t.owner || "unassigned"} • {t.dueDate ? new Date(t.dueDate).toLocaleDateString() : "no due"}{t.recurrence && t.recurrence !== "None" ? ` • ↻${t.recurrence}` : ""})</small><button style={{marginLeft:8}} onClick={async()=>{await apiFetch("/api/tasks",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:t.id,status:"In Progress"})});load();}}>Start</button><button style={{marginLeft:4}} onClick={async()=>{await apiFetch("/api/tasks",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:t.id,status:"Completed"})});load();}}>Complete</button></li>))}</ul>
   </main>);
 }

@@ -1,9 +1,10 @@
 "use client";
+import { apiFetch } from "@/lib/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 export default function Dashboard() {
   const [d, setD] = useState<any>(null);
-  useEffect(() => { fetch("/api/dashboard").then(r=>r.json()).then(setD); }, []);
+  useEffect(() => { apiFetch("/api/dashboard").then(r=>r.json()).then(setD); }, []);
   if (!d) return <main style={{padding:24}}>Loading…</main>;
   const cards = [["Members",d.members],["Visitors",d.visitors],["Attendance (recent)",d.attendance],["Upcoming events",d.upcomingEvents],["Pending tasks",d.pending],["Overdue tasks",d.overdue],["Pending follow-ups",d.followUps]];
   return (<main style={{padding:24,fontFamily:"system-ui"}}>

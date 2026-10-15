@@ -1,23 +1,24 @@
 "use client";
+import { apiFetch } from "@/lib/client";
 import { useEffect, useState } from "react";
 export default function Visitors() {
   const [list, setList] = useState<any[]>([]);
   const [name, setName] = useState("");
   const [assignee, setAssignee] = useState("");
   const [due, setDue] = useState("");
-  async function load() { setList(await (await fetch("/api/visitors")).json()); }
+  async function load() { setList(await (await apiFetch("/api/visitors")).json()); }
   useEffect(() => { load(); }, []);
   async function add() {
     if (!name.trim()) { alert("Enter a name first"); return; }
-    await fetch("/api/visitors", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name.trim() }) });
+    await apiFetch("/api/visitors", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name.trim() }) });
     setName(""); load();
   }
   async function follow(id: number) {
-    await fetch("/api/followups", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ visitorId: id, assignee: assignee || null, dueDate: due || null }) });
+    await apiFetch("/api/followups", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ visitorId: id, assignee: assignee || null, dueDate: due || null }) });
     setAssignee(""); setDue(""); load();
   }
   async function convert(id: number) {
-    await fetch("/api/visitors", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, convert: true }) });
+    await apiFetch("/api/visitors", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, convert: true }) });
     alert("Converted to member"); load();
   }
   const overdue = (d: any) => d && new Date(d) < new Date() ? { color: "red", fontWeight: 700 } : {};

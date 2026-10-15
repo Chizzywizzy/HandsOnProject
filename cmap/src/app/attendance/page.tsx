@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/lib/client";
 import { useEffect, useState } from "react";
 export default function Attendance() {
   const [sessions, setSessions] = useState<any[]>([]);
@@ -8,21 +9,21 @@ export default function Attendance() {
   const [present, setPresent] = useState<Record<number, boolean>>({});
   const [qr, setQr] = useState("");
   async function load() {
-    setSessions(await (await fetch("/api/sessions")).json());
-    setMembers(await (await fetch("/api/members")).json());
+    setSessions(await (await apiFetch("/api/sessions")).json());
+    setMembers(await (await apiFetch("/api/members")).json());
   }
   useEffect(() => { load(); }, []);
   async function create() {
-    const r = await fetch("/api/sessions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ service }) });
+    const r = await apiFetch("/api/sessions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ service }) });
     const s = await r.json(); setSid(String(s.id)); load();
   }
   async function save() {
     const records = members.map(m => ({ memberId: m.id, present: present[m.id] ?? true }));
-    await fetch("/api/attendance", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sessionId: Number(sid), records }) });
+    await apiFetch("/api/attendance", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sessionId: Number(sid), records }) });
     alert("Saved " + records.filter(r=>r.present).length + " present"); load();
   }
   async function showQR() {
-    const j = await (await fetch("/api/qr?sessionId=" + sid)).json();
+    const j = await (await apiFetch("/api/qr?sessionId=" + sid)).json();
     setQr(j.qr);
   }
   return (<main style={{padding:24,fontFamily:"system-ui"}}>

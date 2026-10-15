@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/lib/client";
 import { useEffect, useState } from "react";
 export default function Reports() {
   const [type, setType] = useState("members");
@@ -9,7 +10,7 @@ export default function Reports() {
   const [ai, setAi] = useState<{ loading: boolean; text: string; error: string }>({ loading: false, text: "", error: "" });
   async function load() {
     const q = new URLSearchParams({ type, dept, status }).toString();
-    setData(await (await fetch("/api/reports?" + q)).json());
+    setData(await (await apiFetch("/api/reports?" + q)).json());
   }
   function csv() {
     if (!data?.rows?.length) { alert("Run a report first"); return; }
@@ -23,7 +24,7 @@ export default function Reports() {
   async function summarize() {
     setAi({ loading: true, text: "", error: "" });
     try {
-      const r = await fetch("/api/ai/summary", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type, dept, status }) });
+      const r = await apiFetch("/api/ai/summary", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type, dept, status }) });
       const j = await r.json();
       if (!r.ok) setAi({ loading: false, text: "", error: j.error ?? "Request failed." });
       else setAi({ loading: false, text: j.summary + "\n\n— " + j.disclaimer + " (model " + j.model + ")", error: "" });
@@ -31,7 +32,7 @@ export default function Reports() {
       setAi({ loading: false, text: "", error: "Network error." });
     }
   }
-  useEffect(() => { fetch("/api/departments").then(r=>r.json()).then(setDepts); load(); }, []);
+  useEffect(() => { apiFetch("/api/departments").then(r=>r.json()).then(setDepts); load(); }, []);
   return (<main style={{padding:24,fontFamily:"system-ui"}}>
     <h1>Reports (Phase 7 local)</h1>
     <select value={type} onChange={e=>setType(e.target.value)} style={{padding:8}}><option value="members">Membership</option><option value="tasks">Tasks</option><option value="attendance">Attendance</option><option value="visitors">Visitors</option></select>

@@ -1,13 +1,14 @@
 "use client";
+import { apiFetch } from "@/lib/client";
 import { use, useEffect, useState } from "react";
 export default function Checkin({ params }: any) {
   const { id } = use(params as Promise<{ id: string }>);
   const [members, setMembers] = useState<any[]>([]);
   const [mid, setMid] = useState("");
-  useEffect(() => { fetch("/api/members").then(r=>r.json()).then(setMembers); }, []);
+  useEffect(() => { apiFetch("/api/members").then(r=>r.json()).then(setMembers); }, []);
   async function go() {
     if (!mid) { alert("Select your name"); return; }
-    await fetch("/api/attendance", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sessionId: Number(id), records: [{ memberId: Number(mid), present: true }] }) });
+    await apiFetch("/api/attendance", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sessionId: Number(id), records: [{ memberId: Number(mid), present: true }] }) });
     alert("Checked in!");
   }
   return (<main style={{padding:24,fontFamily:"system-ui"}}>
