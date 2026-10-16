@@ -15,8 +15,11 @@ const FEATURES: Array<[string, string, string]> = [
 export default function Home() {
   return (
     <div className="lp-wrap">
+      <a href="#main-content" className="lp-skip">
+        Skip to content
+      </a>
       <SiteNav />
-      <main>
+      <main id="main-content">
         <div className="lp-inner lp-hero">
           <div>
             <span className="lp-eyebrow">Church operations + accountability</span>
@@ -161,6 +164,73 @@ export default function Home() {
                 Request a pilot
               </a>
             </p>
+          </div>
+        </section>
+
+        <section className="lp-inner lp-section" aria-labelledby="faq-heading">
+          <h2 className="lp-h2" id="faq-heading">
+            Frequently asked questions
+          </h2>
+          <div className="lp-faq">
+            <details>
+              <summary>How much does CMAP cost?</summary>
+              <p>
+                Pilot conversations are free and carry no obligation. No fixed pricing is
+                published yet — contact us to discuss what your church needs.
+              </p>
+            </details>
+            <details>
+              <summary>Where is our church&apos;s data stored?</summary>
+              <p>
+                Records live in a managed hosted database. Access is role-based, and every
+                important change is written to an audit trail showing who did what.
+              </p>
+            </details>
+            <details>
+              <summary>Does CMAP work offline?</summary>
+              <p>
+                The public pages are cached for poor connections, but member records, tasks,
+                and reports need an internet connection — the app tells you clearly when
+                you are offline instead of showing stale data.
+              </p>
+            </details>
+            <details>
+              <summary>Is the Android app safe to install?</summary>
+              <p>
+                Yes — it is a signed release build produced from this project&apos;s public
+                source, distributed through our GitHub releases page. It needs internet
+                access because your records stay on the server.
+              </p>
+            </details>
+            <details>
+              <summary>What does the AI actually do?</summary>
+              <p>
+                Only one thing today: it drafts plain-language summaries of reports you
+                choose to summarize. Every summary is labeled AI-generated and must be
+                reviewed by a person — it never makes membership, pastoral, or financial
+                decisions.
+              </p>
+            </details>
+          </div>
+        </section>
+
+        <section className="lp-final">
+          <div className="lp-inner lp-section">
+            <h2 className="lp-h2">Bring order to your church office.</h2>
+            <p className="lp-sub">
+              Join a pilot, install the app, or sign in — every record stays accountable.
+            </p>
+            <div className="lp-cta-row">
+              <a
+                className="lp-btn lp-btn-teal"
+                href="mailto:ned.uz07@gmail.com?subject=CMAP%20pilot%20inquiry"
+              >
+                Start a pilot conversation
+              </a>
+              <Link className="lp-btn lp-btn-ghost" href="/login" style={{ background: "#fff" }}>
+                Sign In
+              </Link>
+            </div>
           </div>
         </section>
       </main>

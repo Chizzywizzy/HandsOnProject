@@ -66,8 +66,8 @@ body {
 .lp-btn { display: inline-block; padding: 10px 20px; border-radius: 10px; font-weight: 700; font-size: 15px; text-decoration: none; border: 1px solid transparent; cursor: pointer; }
 .lp-btn-primary { background: var(--cmap-red); color: #fff; }
 .lp-btn-primary:hover { background: var(--cmap-red-dark); }
-.lp-btn-teal { background: var(--cmap-teal); color: #fff; }
-.lp-btn-teal:hover { background: var(--cmap-teal-dark); }
+.lp-btn-teal { background: var(--cmap-teal-dark); color: #fff; }
+.lp-btn-teal:hover { background: #0a5f57; }
 .lp-btn-ghost { border-color: var(--cmap-border); color: var(--cmap-ink); background: #fff; }
 .lp-btn-ghost:hover { border-color: var(--cmap-ink); }
 .lp-menu-btn { display: none; background: #fff; border: 1px solid var(--cmap-border); border-radius: 8px; padding: 8px 12px; font-size: 15px; }
@@ -101,6 +101,21 @@ body {
 .lp-footer { border-top: 1px solid var(--cmap-border); padding-top: 28px; padding-bottom: 28px; color: var(--cmap-faint); font-size: 14px; }
 .lp-footer-row { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .lp-footer a { color: var(--cmap-muted); }
+
+/* Skip link for keyboard users. */
+.lp-skip { position: absolute; left: -9999px; top: 0; background: var(--cmap-navy); color: #fff; padding: 10px 16px; z-index: 100; border-radius: 0 0 8px 0; }
+.lp-skip:focus { left: 0; }
+
+/* FAQ (native details = keyboard accessible, no JS). */
+.lp-faq { margin-top: 24px; display: grid; gap: 10px; }
+.lp-faq details { border: 1px solid var(--cmap-border); border-radius: var(--cmap-radius); padding: 14px 16px; background: #fff; }
+.lp-faq summary { font-weight: 700; cursor: pointer; }
+.lp-faq p { color: var(--cmap-muted); font-size: 14px; line-height: 1.6; margin: 8px 0 0; }
+
+/* Final call-to-action band. */
+.lp-final { background: var(--cmap-navy); color: #fff; }
+.lp-final h2 { color: #fff; }
+.lp-final .lp-sub { color: #cbd5e1; }
 
 /* Login */
 .login-shell { min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 24px; background: var(--cmap-soft); font-family: system-ui, sans-serif; }
